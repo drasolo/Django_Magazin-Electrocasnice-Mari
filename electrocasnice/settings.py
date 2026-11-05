@@ -16,6 +16,15 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Parolele locale (de exemplu cea a bazei de date) stau în fișierul .env,
+# pe linii de forma CHEIE=valoare. Fișierul nu intră în git.
+fisier_env = BASE_DIR / ".env"
+if fisier_env.exists():
+    for linie in fisier_env.read_text(encoding="utf-8").splitlines():
+        if "=" in linie and not linie.lstrip().startswith("#"):
+            cheie, valoare = linie.split("=", 1)
+            os.environ.setdefault(cheie.strip(), valoare.strip())
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
@@ -40,7 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "magazin",
+    "magazin.apps.MagazinConfig",
 ]
 
 MIDDLEWARE = [
@@ -51,6 +60,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Pune IP-ul în request.ip și înregistrează fiecare Accesare
+    "magazin.middleware.MiddlewareAccesari",
 ]
 
 ROOT_URLCONF = "electrocasnice.urls"
@@ -65,6 +76,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # Datele firmei (FIRMA, mai jos) ajung în toate template-urile
+                "magazin.ctx_processors.date_firma",
             ],
         },
     },
@@ -76,10 +89,18 @@ WSGI_APPLICATION = "electrocasnice.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
+# Baza, schema și userul se creează cu creare_user.sql
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "OPTIONS": {
+            "options": "-c search_path=django",  # tabelele stau în schema "django"
+        },
+        "NAME": "electrocasnice",
+        "USER": "magazin",
+        "PASSWORD": os.environ.get("DB_PASSWORD", ""),  # din .env
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -119,10 +140,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = "static/"
+# Aici adună "python manage.py collectstatic" fișierele statice pentru producție
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Imaginile produselor, încărcate din admin
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+# Datele firmei, afișate în footer prin context processor.
+# Firma e fictivă. Ultimele două câmpuri sunt cele alese de noi.
+FIRMA = {
+    "nume": "Electrocasnice Mari SRL",
+    "an_infiintare": 2009,
+    "telefon": "021 000 0000",
+    "adresa_sediu": "Str. Exemplului nr. 10, București",
+    "email": "contact@electrocasnice-mari.example",
+    "prag_livrare_gratuita": 1500,  # lei; comenzile peste prag au livrarea gratuită
+}
 
 
 # Email

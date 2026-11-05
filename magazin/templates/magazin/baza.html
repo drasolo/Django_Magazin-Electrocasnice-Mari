@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titlu %}{{ firma.nume }}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+    <link rel="icon" href="{% static 'imagini/sigla.svg' %}">
+</head>
+<body>
+    <header>
+        <a class="sigla" href="{% url 'index' %}">
+            <img src="{% static 'imagini/sigla.svg' %}" alt="" width="40" height="40">
+            Electrocasnice Mari
+        </a>
+        <nav>
+            <ul class="meniu">
+                <li>
+                    <a href="{% url 'index' %}">Acasă</a>
+                    {# Submeniul duce la secțiuni din pagina principală #}
+                    <ul class="submeniu">
+                        <li><a href="{% url 'index' %}#despre-magazin">Despre magazin</a></li>
+                        <li><a href="{% url 'index' %}#categorii">Categorii</a></li>
+                        <li><a href="{% url 'index' %}#program">Program</a></li>
+                        <li><a href="{% url 'index' %}#promotii-curente">Promoții curente</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url 'produse' %}">Produse</a>
+                    <ul class="submeniu">
+                        <li><a href="{% url 'produse' %}">Toate produsele</a></li>
+                        <li><a href="{% url 'promotii' %}">Promoții</a></li>
+                        <li><a href="{% url 'servicii' %}">Servicii</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url 'despre' %}">Despre noi</a>
+                    <ul class="submeniu">
+                        <li><a href="{% url 'despre' %}">Cine suntem</a></li>
+                        <li><a href="{% url 'istoric' %}">Istoric</a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+                <li><a href="{% url 'cos_virtual' %}">Coș</a></li>
+                <li>
+                    <a href="{% url 'info' %}">Server</a>
+                    <ul class="submeniu">
+                        <li><a href="{% url 'info' %}">Informații</a></li>
+                        <li><a href="{% url 'log' %}">Log accesări</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block continut %}{% endblock %}
+    </main>
+
+    <footer>
+        {# request.ip vine din middleware (magazin/middleware.py) #}
+        <p>IP-ul tău: {{ request.ip }}</p>
+        {# firma vine din context processor (magazin/ctx_processors.py) #}
+        <p>
+            {{ firma.adresa_sediu }} · Telefon {{ firma.telefon }} · {{ firma.email }}<br>
+            Livrare gratuită pentru comenzile de peste {{ firma.prag_livrare_gratuita }} lei
+        </p>
+        <p>&copy; {{ firma.an_infiintare }}-{% now "Y" %} {{ firma.nume }}. Toate drepturile rezervate.</p>
+    </footer>
+</body>
+</html>

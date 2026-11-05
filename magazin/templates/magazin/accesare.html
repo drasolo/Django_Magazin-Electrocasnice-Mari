@@ -1,0 +1,24 @@
+{% extends "magazin/baza.html" %}
+
+{% block titlu %}Accesarea {{ a.id }}{% endblock %}
+
+{% block continut %}
+<h1>Accesarea {{ a.id }}</h1>
+
+<dl class="detalii">
+    <dt>IP client</dt><dd>{{ a.ip_client }}</dd>
+    <dt>URL complet</dt><dd>{{ a.string_url }}</dd>
+    <dt>Pagina</dt><dd>{{ a.pagina }}</dd>
+    <dt>Data</dt><dd>{{ a.calculeaza_data }}, ora {{ a.data|time:"H:i:s" }}</dd>
+    <dt>Parametri</dt>
+    <dd>
+        {% for nume, valoare in a.lista_parametri %}
+            {{ nume }} = {{ valoare|default_if_none:"(fără valoare)" }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            niciunul
+        {% endfor %}
+    </dd>
+</dl>
+
+<p><a href="{% url 'log' %}">Înapoi la log</a></p>
+{% endblock %}

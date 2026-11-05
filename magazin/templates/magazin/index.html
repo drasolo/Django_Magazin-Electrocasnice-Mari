@@ -1,0 +1,57 @@
+{% extends "magazin/baza.html" %}
+{% load static %}
+
+{% block titlu %}Electrocasnice Mari{% endblock %}
+
+{% block continut %}
+<h1>Electrocasnice Mari</h1>
+
+<section id="despre-magazin">
+    <h2>Despre magazin</h2>
+    <img class="ilustratie" src="{% static 'imagini/acasa.svg' %}"
+         alt="Un frigider, o mașină de spălat și un cuptor" width="480" height="240">
+    <p>
+        Magazin de electrocasnice mari este un magazin online pentru aparate de uz casnic:
+        frigidere și combine frigorifice, mașini de spălat rufe și vase, uscătoare, cuptoare,
+        plite și hote. Vizitatorul alege o categorie, filtrează produsele după brand, clasă
+        energetică, dimensiuni (lățime, înălțime), capacitate, culoare și interval de preț,
+        apoi deschide pagina produsului, unde vede specificațiile, stocul disponibil și prețul.
+        La produsele reduse, pagina arată și cel mai mic preț din ultimele 30 de zile.
+        Utilizatorii își pot face cont, pot adăuga produse în coș și pot plasa comenzi.
+        Clienții fideli primesc un card de loialitate cu puncte. Administratorul gestionează
+        din panoul de administrare produsele, stocurile și promoțiile cu perioadă de
+        valabilitate, iar stocul scade automat la fiecare comandă. Aplicația este construită
+        în Django.
+    </p>
+</section>
+
+<section id="categorii">
+    <h2>Categorii</h2>
+    <ul class="categorii">
+        <li>Frigidere și combine frigorifice</li>
+        <li>Mașini de spălat rufe</li>
+        <li>Uscătoare de rufe</li>
+        <li>Mașini de spălat vase</li>
+        <li>Cuptoare și plite</li>
+        <li>Hote</li>
+    </ul>
+</section>
+
+<section id="program">
+    <h2>Program</h2>
+    <table>
+        <tr><th>Luni - Vineri</th><td>09:00 - 20:00</td></tr>
+        <tr><th>Sâmbătă</th><td>10:00 - 18:00</td></tr>
+        <tr><th>Duminică</th><td>închis</td></tr>
+    </table>
+    <p>Comenzile online se primesc oricând.</p>
+</section>
+
+<section id="promotii-curente">
+    <h2>Promoții curente</h2>
+    <p>
+        Promoțiile apar aici după ce le adăugăm din administrare. Până atunci, livrarea e
+        gratuită pentru comenzile de peste {{ firma.prag_livrare_gratuita }} lei.
+    </p>
+</section>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "magazin/baza.html" %}
+
+{% block titlu %}Informații despre server{% endblock %}
+
+{% block continut %}
+<h1>Informații despre server</h1>
+
+<section>
+    <h2>Data și ora</h2>
+    {# data_ora vine din Accesare.calculeaza_data(); /info?data=zi sau ?data=timp #}
+    <p>{{ data_ora }}</p>
+</section>
+{% endblock %}

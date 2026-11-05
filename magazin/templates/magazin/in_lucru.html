@@ -1,0 +1,12 @@
+{% extends "magazin/baza.html" %}
+
+{% block titlu %}În lucru{% endblock %}
+
+{% block continut %}
+<h1>În lucru</h1>
+<p>
+    Pagina <strong>{{ titlu }}</strong> nu este gata încă. O construim pe măsură ce avansăm cu
+    proiectul. Până atunci, găsești informații despre magazin pe
+    <a href="{% url 'index' %}">pagina principală</a>.
+</p>
+{% endblock %}

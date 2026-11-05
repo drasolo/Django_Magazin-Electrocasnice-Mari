@@ -5,3 +5,8 @@ db.sqlite3
 media/
 .idea/
 .vscode/
+
+# Materialele de la curs: slide-uri, fișe, prezența (date personale). Rămân doar local.
+materiale/
+.env
+staticfiles/

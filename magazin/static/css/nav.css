@@ -1,0 +1,209 @@
+/* Culorile site-ului, folosite mai jos cu var(...) */
+:root {
+    --albastru: #1f5f8b;
+    --albastru-inchis: #17405e;
+    --gri-deschis: #f2f5f8;
+    --gri: #d5dde5;
+    --text: #1d2730;
+    --rosu: #b3261e;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    line-height: 1.5;
+    color: var(--text);
+    background: #fff;
+}
+
+/* ---------- Header ---------- */
+
+header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    color: #fff;
+    /* imagine de fundal repetată peste culoarea albastră */
+    background: var(--albastru) url("../imagini/fundal.svg") repeat;
+}
+
+.sigla {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ---------- Meniul derulant ---------- */
+
+.meniu,
+.submeniu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.meniu {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* submeniul se poziționează față de opțiunea lui din meniu */
+.meniu > li {
+    position: relative;
+}
+
+.meniu a {
+    display: block;
+    padding: 0.6rem 0.9rem;
+    color: #fff;
+    text-decoration: none;
+}
+
+.meniu a:hover,
+.meniu a:focus {
+    background: var(--albastru-inchis);
+}
+
+.submeniu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    min-width: 12rem;
+    background: var(--albastru-inchis);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* submeniul apare la trecerea mouse-ului sau când un link din el are focus (tastatura) */
+.meniu > li:hover > .submeniu,
+.meniu > li:focus-within > .submeniu {
+    display: block;
+}
+
+.submeniu a:hover,
+.submeniu a:focus {
+    background: var(--albastru);
+}
+
+/* ---------- Conținut ---------- */
+
+main {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+h1,
+h2 {
+    color: var(--albastru-inchis);
+}
+
+section {
+    margin-bottom: 2rem;
+}
+
+.ilustratie {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 8px;
+}
+
+.categorii {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: 0.75rem;
+    padding: 0;
+    list-style: none;
+}
+
+.categorii li {
+    padding: 0.75rem;
+    border: 1px solid var(--gri);
+    border-left: 4px solid var(--albastru);
+    border-radius: 6px;
+    background: var(--gri-deschis);
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 0.4rem 0.75rem;
+    border: 1px solid var(--gri);
+    text-align: left;
+}
+
+th {
+    background: var(--gri-deschis);
+}
+
+/* tabelul din /log poate fi lat; pe ecrane mici se derulează orizontal */
+.tabel-log {
+    display: block;
+    overflow-x: auto;
+}
+
+.eroare {
+    color: var(--rosu);
+    font-weight: bold;
+}
+
+.detalii dt {
+    font-weight: bold;
+}
+
+.detalii dd {
+    margin: 0 0 0.75rem 0;
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+    padding: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #4a5866;
+    background: var(--gri-deschis);
+    border-top: 1px solid var(--gri);
+}
+
+/* ---------- Ecrane mici (telefon) ---------- */
+
+@media (max-width: 700px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .meniu {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* pe telefon nu există hover, deci submeniurile stau deschise, sub opțiunea lor */
+    .submeniu {
+        display: block;
+        position: static;
+        background: none;
+        box-shadow: none;
+    }
+
+    .submeniu a {
+        padding-left: 2rem;
+    }
+}

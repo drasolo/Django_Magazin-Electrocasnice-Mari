@@ -1,0 +1,17 @@
+{% extends "magazin/baza.html" %}
+
+{% block titlu %}Istoric{% endblock %}
+
+{% block continut %}
+<h1>Istoric</h1>
+
+<section>
+    <h2>Cum am ajuns aici</h2>
+    <ol class="istoric">
+        <li><strong>{{ firma.an_infiintare }}.</strong> Deschidem primul showroom, cu frigidere și mașini de spălat.</li>
+        <li><strong>2014.</strong> Adăugăm cuptoare, plite și hote, apoi serviciul de montaj.</li>
+        <li><strong>2019.</strong> Lansăm magazinul online.</li>
+        <li><strong>2024.</strong> Începem să ridicăm aparatele vechi pentru reciclare.</li>
+    </ol>
+</section>
+{% endblock %}

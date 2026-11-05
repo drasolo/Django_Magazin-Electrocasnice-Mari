@@ -12,4 +12,4 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-Site-ul pornește la http://127.0.0.1:8000/.
+Site-ul pornește la http://127.0.0.1:8000/magazin/. Cerințele cursului și unde e implementată fiecare sunt în `docs/cerinte.md`.

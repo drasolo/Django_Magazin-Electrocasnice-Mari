@@ -1,0 +1,69 @@
+{% extends "magazin/baza.html" %}
+
+{% block titlu %}Log accesări{% endblock %}
+
+{% block continut %}
+<h1>Log accesări</h1>
+
+{% for eroare in erori %}
+    <p class="eroare">{{ eroare }}</p>
+{% endfor %}
+
+<section>
+    <h2>Accesări</h2>
+    {% if coloane %}
+        <table class="tabel-log">
+            <tr>
+                {% for coloana in coloane %}<th>{{ coloana }}</th>{% endfor %}
+            </tr>
+            {% for rand in randuri %}
+                <tr>
+                    {% for valoare in rand %}<td>{{ valoare }}</td>{% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <ul>
+            {% for a in selectie %}
+                <li>
+                    <a href="{% url 'accesare' a.id %}">#{{ a.id }}</a>
+                    {{ a.pagina }} ({{ a.ip_client }})
+                </li>
+            {% empty %}
+                <li>Nicio accesare.</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if eroare_ultimele %}
+        <p class="eroare">{{ eroare_ultimele }}</p>
+    {% endif %}
+
+    <p>Pagina cea mai accesată: <strong>{{ cea_mai_accesata }}</strong></p>
+    <p>Pagina cea mai puțin accesată: <strong>{{ cea_mai_putin_accesata }}</strong></p>
+</section>
+
+{% if afiseaza_numar %}
+<section>
+    <h2>Număr de accesări</h2>
+    <p>De la pornirea serverului au fost {{ toate|length }} accesări.</p>
+</section>
+{% endif %}
+
+{% if afiseaza_detalii %}
+<section>
+    <h2>Detalii accesări</h2>
+    <ul>
+        {% for a in toate %}
+            <li>#{{ a.id }}: {{ a.calculeaza_data }}, ora {{ a.data|time:"H:i:s" }}</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+<section>
+    <h2>Parametri</h2>
+    {# pluralize:"u,i" dă "1 parametru", dar "0 parametri" sau "2 parametri" #}
+    <p>Pagina a primit {{ nume_parametri|length }} parametr{{ nume_parametri|length|pluralize:"u,i" }}{% if nume_parametri %}: {{ nume_parametri|join:", " }}{% endif %}.</p>
+</section>
+{% endblock %}

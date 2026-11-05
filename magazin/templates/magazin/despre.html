@@ -1,0 +1,29 @@
+{% extends "magazin/baza.html" %}
+{% load static %}
+
+{% block titlu %}Despre noi{% endblock %}
+
+{% block continut %}
+<h1>Despre noi</h1>
+
+<section id="cine-suntem">
+    <h2>Cine suntem</h2>
+    <img class="ilustratie" src="{% static 'imagini/despre.svg' %}"
+         alt="Fațada magazinului Electrocasnice Mari" width="480" height="240">
+    <p>
+        {{ firma.nume }} vinde electrocasnice mari din {{ firma.an_infiintare }}. Am început cu un
+        singur showroom și vindem acum online în toată țara. Avem frigidere, mașini de spălat,
+        uscătoare, cuptoare, plite și hote de la producători cunoscuți.
+    </p>
+</section>
+
+<section id="ce-oferim">
+    <h2>Ce oferim</h2>
+    <ul>
+        <li>Livrare la domiciliu, gratuită peste {{ firma.prag_livrare_gratuita }} lei.</li>
+        <li>Montaj pentru aparatele incorporabile.</li>
+        <li>Ridicarea aparatului vechi la livrarea celui nou.</li>
+        <li>Garanție extinsă, la cerere.</li>
+    </ul>
+</section>
+{% endblock %}

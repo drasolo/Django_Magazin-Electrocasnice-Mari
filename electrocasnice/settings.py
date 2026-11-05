@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # ArrayField (Produs.taguri) și GinIndex, specifice PostgreSQL
+    "django.contrib.postgres",
     "magazin.apps.MagazinConfig",
 ]
 

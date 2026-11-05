@@ -1,0 +1,236 @@
+/* Paginile cu produse și categorii (laboratorul 4). Culorile de bază sunt în nav.css. */
+
+/* --culoare vine din atributul style al fiecărui chenar: culoarea categoriei produsului */
+
+/* ---------- Antetul categoriei ---------- */
+
+.antet-categorie {
+    padding: 1rem 1.25rem;
+    border-left: 6px solid var(--culoare);
+    border-radius: 8px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--culoare) 18%, #fff), #fff);
+}
+
+.antet-categorie h1 {
+    margin-top: 0;
+    color: var(--culoare);
+}
+
+/* ---------- Sortare și taguri active ---------- */
+
+.sortare {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.sortare select,
+.sortare button {
+    padding: 0.35rem 0.5rem;
+    font: inherit;
+}
+
+.sortare button {
+    border: 0;
+    border-radius: 4px;
+    color: #fff;
+    background: var(--albastru);
+    cursor: pointer;
+}
+
+.taguri-active {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tag-activ {
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    color: #fff;
+    background: var(--albastru-inchis);
+    text-decoration: none;
+}
+
+.tag-activ:hover,
+.tag-activ:focus {
+    background: var(--rosu);
+}
+
+/* ---------- Paginare ---------- */
+
+.paginare {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+/* ---------- Lista de produse ---------- */
+
+.grila-produse {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1rem;
+}
+
+.card-produs {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem;
+    border: 1px solid var(--gri);
+    border-top: 6px solid var(--culoare);
+    border-radius: 8px;
+    background: #fff;
+}
+
+.card-produs img,
+.card-similar img,
+.produs-detaliat img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    background: var(--gri-deschis);
+}
+
+.card-produs h2 {
+    margin: 0.25rem 0;
+    font-size: 1.05rem;
+}
+
+.card-produs h2 a {
+    color: var(--text);
+}
+
+.categorie-produs {
+    font-weight: bold;
+    color: var(--culoare);
+    text-decoration: none;
+}
+
+.pret {
+    margin: 0.25rem 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.specificatii {
+    margin: 0.25rem 0;
+    padding-left: 1.1rem;
+    font-size: 0.9rem;
+}
+
+.stoc {
+    margin: 0.25rem 0;
+    color: #1d8a6b;
+}
+
+/* Stoc sub STOC_MIN: text roșu, chenar roșu și o iconiță care pulsează */
+.stoc-limitat {
+    padding: 0.2rem 0.5rem;
+    border: 2px solid var(--rosu);
+    border-radius: 4px;
+    font-weight: bold;
+    color: var(--rosu);
+}
+
+.stoc-limitat i {
+    animation: pulseaza 1.2s ease-in-out infinite;
+}
+
+@keyframes pulseaza {
+    50% {
+        opacity: 0.3;
+    }
+}
+
+.taguri {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.taguri a {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--gri);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--albastru-inchis);
+    background: var(--gri-deschis);
+    text-decoration: none;
+}
+
+.taguri a:hover,
+.taguri a:focus {
+    color: #fff;
+    background: var(--albastru);
+}
+
+/* ---------- Pagina unui produs ---------- */
+
+.produs-detaliat {
+    padding: 1rem;
+    border-top: 6px solid var(--culoare);
+    border-radius: 8px;
+    background: var(--gri-deschis);
+}
+
+.produs-detaliat h1 {
+    margin-top: 0.25rem;
+}
+
+.produs-detaliat-continut {
+    display: grid;
+    grid-template-columns: minmax(0, 360px) 1fr;
+    gap: 1.5rem;
+}
+
+.specificatii-tabel {
+    margin: 1rem 0;
+    background: #fff;
+}
+
+.promotie {
+    font-weight: bold;
+    color: var(--rosu);
+}
+
+.similare {
+    margin-top: 2rem;
+}
+
+.card-similar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    border: 1px solid var(--gri);
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.card-similar:hover,
+.card-similar:focus {
+    border-color: var(--albastru);
+}
+
+.card-similar .pret {
+    font-size: 1rem;
+}
+
+@media (max-width: 700px) {
+    .produs-detaliat-continut {
+        grid-template-columns: 1fr;
+    }
+}

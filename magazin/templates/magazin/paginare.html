@@ -1,0 +1,11 @@
+{# Apare deasupra și sub produse. {% querystring %} păstrează parametrii din URL #}
+{# (sortarea și tagurile) și schimbă doar numărul paginii. #}
+<nav class="paginare" aria-label="Paginare">
+    {% if pagina.has_previous %}
+    <a href="{% querystring pagina=pagina.previous_page_number %}">« Pagina anterioară</a>
+    {% endif %}
+    <span>Pagina {{ pagina.number }} din {{ pagina.paginator.num_pages }}</span>
+    {% if pagina.has_next %}
+    <a href="{% querystring pagina=pagina.next_page_number %}">Pagina următoare »</a>
+    {% endif %}
+</nav>

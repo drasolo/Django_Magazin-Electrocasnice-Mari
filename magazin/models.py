@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
+from django.urls import reverse
 
 # Modelele urmează diagrama din docs/diagrama.png. Cheile primare (id_categorie,
 # id_brand etc.) nu apar aici: Django creează singur câmpul id pentru fiecare model.
@@ -55,6 +57,10 @@ class Categorie(models.Model):
 
     def __str__(self):
         return self.nume
+
+    def get_absolute_url(self):
+        # /magazin/categorii/Frigidere
+        return reverse("categorie", args=[self.nume])
 
 
 class Brand(models.Model):
@@ -230,6 +236,14 @@ class Produs(models.Model):
 
     def __str__(self):
         return f"{self.nume} ({self.cod_model})"
+
+    def get_absolute_url(self):
+        # /magazin/produse/7. Template-urile și adminul ("Vezi pe site") iau adresa de aici.
+        return reverse("produs", args=[self.id])
+
+    def stoc_limitat(self):
+        """True dacă stocul a scăzut sub STOC_MIN din settings.py."""
+        return self.stoc < settings.STOC_MIN
 
 
 class Promotie(models.Model):

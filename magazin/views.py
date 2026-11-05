@@ -1,10 +1,14 @@
 from collections import Counter
 from urllib.parse import urlencode, urlsplit
 
+from django.conf import settings
+from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
+
+from .models import Categorie, Produs
 
 ZILE = ["Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbătă", "Duminică"]
 LUNI = [
@@ -221,10 +225,6 @@ def in_lucru(request, titlu):
     return render(request, "magazin/in_lucru.html", {"titlu": titlu})
 
 
-def produse(request):
-    return in_lucru(request, "Produse")
-
-
 def servicii(request):
     return in_lucru(request, "Servicii")
 
@@ -239,3 +239,97 @@ def contact(request):
 
 def cos_virtual(request):
     return in_lucru(request, "Coș de cumpărături")
+
+
+# ---------- Produse și categorii (laboratorul 4) ----------
+
+# Coloanele după care se pot sorta produsele: valoarea din URL -> (eticheta, câmpul din model)
+COLOANE_SORTARE = {
+    "data": ("data adăugării", "data_adaugare"),
+    "pret": ("preț", "pret"),
+    "nume": ("nume", "nume"),
+    "stoc": ("stoc", "stoc"),
+}
+# Câte produse din aceeași categorie apar pe pagina unui produs
+K_PRODUSE_SIMILARE = 3
+
+
+def eroare(request, mesaj):
+    """Pagina de eroare pentru un produs sau o categorie care nu există (cod 404)."""
+    return render(request, "magazin/eroare.html", {"mesaj": mesaj}, status=404)
+
+
+def lista_produse(request, produse, categorie=None):
+    """Filtrarea după taguri, sortarea și paginarea produselor.
+
+    O folosesc și pagina cu toate produsele, și paginile categoriilor: fiecare îi dă
+    produsele ei, iar template-ul e același (produse.html). Așa nu scriem codul de două ori.
+    """
+    # ?tag=NoFrost&tag=WiFi: rămân produsele care au toate tagurile active.
+    # dict.fromkeys scoate tagurile repetate și păstrează ordinea lor.
+    taguri_active = list(dict.fromkeys(t for t in request.GET.getlist("tag") if t))
+    if taguri_active:
+        # __contains pe un ArrayField: vectorul produsului conține toate valorile din listă
+        produse = produse.filter(taguri__contains=taguri_active)
+
+    # ?coloana=pret&sort=a sortează după o singură coloană: a crescător, d descrescător.
+    # Fără parametri, primele sunt cele mai noi produse.
+    eroare_sortare = None
+    coloana = request.GET.get("coloana", "data")
+    if coloana not in COLOANE_SORTARE:
+        eroare_sortare = f'Nu se poate sorta după "{coloana}", așa că produsele sunt sortate după data adăugării.'
+        coloana = "data"
+    sens = request.GET.get("sort", "d" if coloana == "data" else "a")
+    if sens not in ("a", "d"):
+        sens = "a"
+    camp = COLOANE_SORTARE[coloana][1]
+    # id-ul departajează produsele cu aceeași valoare, ca un produs să nu apară pe două pagini
+    produse = produse.order_by(camp if sens == "a" else "-" + camp, "id")
+
+    # Paginarea se face pe produsele deja filtrate și sortate
+    paginator = Paginator(produse.select_related("categorie", "brand"), settings.PROD_PER_PAG)
+    # get_page tratează singur ?pagina=abc (dă prima pagină) și ?pagina=999 (dă ultima)
+    pagina = paginator.get_page(request.GET.get("pagina"))
+
+    return render(request, "magazin/produse.html", {
+        "categorie": categorie,
+        "pagina": pagina,
+        "taguri_active": taguri_active,
+        "coloana": coloana,
+        "sens": sens,
+        "coloane_sortare": [(cheie, eticheta) for cheie, (eticheta, _) in COLOANE_SORTARE.items()],
+        "eroare_sortare": eroare_sortare,
+    })
+
+
+def produse(request):
+    return lista_produse(request, Produs.objects.all())
+
+
+def categorie(request, nume):
+    try:
+        cat = Categorie.objects.get(nume=nume)
+    except Categorie.DoesNotExist:
+        return eroare(request, f'Nu există categoria "{nume}".')
+    # Doar produsele categoriei, deci și totalurile din paginare sunt ale categoriei
+    return lista_produse(request, cat.produse.all(), cat)
+
+
+def produs(request, id):
+    try:
+        prod = Produs.objects.select_related("categorie", "brand").get(id=id)
+    except Produs.DoesNotExist:
+        return eroare(request, f"Nu există produsul cu id-ul {id}.")
+
+    # K produse alese aleator din aceeași categorie. order_by("?") amestecă rândurile în SQL.
+    similare = (
+        Produs.objects.filter(categorie=prod.categorie)
+        .exclude(id=prod.id)
+        .order_by("?")[:K_PRODUSE_SIMILARE]
+    )
+    azi = timezone.localdate()
+    return render(request, "magazin/produs.html", {
+        "produs": prod,
+        "similare": similare,
+        "promotii_active": prod.promotii.filter(data_inceput__lte=azi, data_sfarsit__gte=azi),
+    })

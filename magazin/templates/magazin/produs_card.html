@@ -1,0 +1,27 @@
+{% load static magazin_taguri %}
+{# Un produs în lista restrânsă. Culoarea categoriei colorează chenarul și numele categoriei. #}
+<article class="card-produs" style="--culoare: {{ produs.categorie.culoare }}">
+    <a href="{{ produs.get_absolute_url }}">
+        <img src="{% if produs.imagine %}{{ produs.imagine.url }}{% else %}{% static 'imagini/imagine_indisponibila.svg' %}{% endif %}"
+             alt="{{ produs.nume }}" width="240" height="180">
+    </a>
+    <a class="categorie-produs" href="{{ produs.categorie.get_absolute_url }}">
+        <i class="{{ produs.categorie.sigla }}" aria-hidden="true"></i> {{ produs.categorie.nume }}
+    </a>
+    <h2><a href="{{ produs.get_absolute_url }}">{{ produs.nume }}</a></h2>
+    <p class="pret">{{ produs.pret }} lei</p>
+    <ul class="specificatii">
+        <li>Brand: {{ produs.brand.nume }}</li>
+        {% if produs.clasa_energetica %}<li>Clasa energetică: {{ produs.clasa_energetica }}</li>{% endif %}
+        {% if produs.capacitate %}<li>Capacitate: {{ produs.capacitate }} {{ produs.categorie.get_unitate_capacitate_display }}</li>{% endif %}
+        <li>{{ produs.latime }} × {{ produs.inaltime }} × {{ produs.adancime }} mm</li>
+    </ul>
+    {% include "magazin/stoc.html" %}
+    {% if produs.taguri %}
+    <ul class="taguri">
+        {% for tag in produs.taguri %}
+        <li><a href="{% adauga_tag tag %}">{{ tag }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</article>

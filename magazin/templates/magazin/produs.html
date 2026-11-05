@@ -1,0 +1,88 @@
+{% extends "magazin/baza.html" %}
+{% load static %}
+
+{% block titlu %}{{ produs.nume }}{% endblock %}
+
+{% block continut %}
+<article class="produs-detaliat" style="--culoare: {{ produs.categorie.culoare }}">
+    <a class="categorie-produs" href="{{ produs.categorie.get_absolute_url }}">
+        <i class="{{ produs.categorie.sigla }}" aria-hidden="true"></i> {{ produs.categorie.nume }}
+    </a>
+    <h1>{{ produs.nume }}</h1>
+
+    <div class="produs-detaliat-continut">
+        <img src="{% if produs.imagine %}{{ produs.imagine.url }}{% else %}{% static 'imagini/imagine_indisponibila.svg' %}{% endif %}"
+             alt="{{ produs.nume }}" width="360" height="270">
+
+        <div>
+            <p class="pret">{{ produs.pret }} lei</p>
+            {% include "magazin/stoc.html" %}
+
+            {% for promotie in promotii_active %}
+            <p class="promotie">{{ promotie.nume }}: -{{ promotie.procent_reducere }}% până pe {{ promotie.data_sfarsit|date:"j F" }}</p>
+            {% endfor %}
+
+            <table class="specificatii-tabel">
+                <tr><th>Cod model</th><td>{{ produs.cod_model }}</td></tr>
+                <tr><th>Brand</th><td>{{ produs.brand.nume }}{% if produs.brand.tara_origine %} ({{ produs.brand.tara_origine }}){% endif %}</td></tr>
+                <tr><th>Clasa energetică</th><td>{{ produs.clasa_energetica|default:"fără etichetă energetică" }}</td></tr>
+                <tr><th>Dimensiuni (L × Î × A)</th><td>{{ produs.latime }} × {{ produs.inaltime }} × {{ produs.adancime }} mm</td></tr>
+                <tr><th>Capacitate</th><td>{% if produs.capacitate %}{{ produs.capacitate }} {{ produs.categorie.get_unitate_capacitate_display }}{% else %}nu e cazul{% endif %}</td></tr>
+                <tr><th>Culoare</th><td>{{ produs.get_culoare_display }}</td></tr>
+                <tr><th>Încorporabil</th><td>{{ produs.incorporabil|yesno:"da,nu" }}</td></tr>
+                <tr><th>Garanție</th><td>{{ produs.garantie_luni }} luni</td></tr>
+                <tr><th>Stoc</th><td>{{ produs.stoc }} bucăți</td></tr>
+                <tr><th>Adăugat pe</th><td>{{ produs.data_adaugare|date:"j F Y" }}</td></tr>
+            </table>
+
+            {% if produs.taguri %}
+            {# Din pagina produsului, un tag duce la lista cu toate produsele care îl au #}
+            <ul class="taguri">
+                {% for tag in produs.taguri %}
+                <li><a href="{% url 'produse' %}?tag={{ tag|urlencode }}">{{ tag }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% with servicii=produs.servicii.all %}
+            {% if servicii %}
+            <h2>Servicii disponibile</h2>
+            <ul>
+                {% for serviciu in servicii %}<li>{{ serviciu.nume }}: {{ serviciu.pret }} lei</li>{% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            {% with documente=produs.documente.all %}
+            {% if documente %}
+            <h2>Documente</h2>
+            <ul>
+                {% for document in documente %}
+                <li><a href="{{ document.fisier.url }}">{{ document.get_tip_display }}</a> ({{ document.get_limba_display }})</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</article>
+
+<section class="similare">
+    <h2>Produse din aceeași categorie</h2>
+    {% if similare %}
+    <div class="grila-produse">
+        {% for alt_produs in similare %}
+        {# Tot chenarul e un link, deci click pe imagine, nume sau preț duce la produs #}
+        <a class="card-similar" href="{{ alt_produs.get_absolute_url }}">
+            <img src="{% if alt_produs.imagine %}{{ alt_produs.imagine.url }}{% else %}{% static 'imagini/imagine_indisponibila.svg' %}{% endif %}"
+                 alt="" width="240" height="180">
+            <span class="nume">{{ alt_produs.nume }}</span>
+            <span class="pret">{{ alt_produs.pret }} lei</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Nu mai sunt alte produse în această categorie.</p>
+    {% endif %}
+</section>
+{% endblock %}

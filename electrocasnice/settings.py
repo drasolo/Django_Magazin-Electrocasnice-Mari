@@ -71,7 +71,9 @@ ROOT_URLCONF = "electrocasnice.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        # templates/ din rădăcina proiectului: aici stau template-urile care le înlocuiesc
+        # pe cele din admin (templates/admin/base_site.html)
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -80,6 +82,8 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 # Datele firmei (FIRMA, mai jos) ajung în toate template-urile
                 "magazin.ctx_processors.date_firma",
+                # Categoriile din meniu, citite din baza de date
+                "magazin.ctx_processors.categorii_meniu",
             ],
         },
     },
@@ -160,6 +164,14 @@ FIRMA = {
     "email": "contact@electrocasnice-mari.example",
     "prag_livrare_gratuita": 1500,  # lei; comenzile peste prag au livrarea gratuită
 }
+
+
+# Pagina de produse
+
+# Sub acest stoc, produsul apare pe site cu stoc limitat
+STOC_MIN = 5
+# Câte produse se afișează pe o pagină (Paginator)
+PROD_PER_PAG = 6
 
 
 # Email

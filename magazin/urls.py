@@ -11,6 +11,10 @@ urlpatterns = [
     path("despre", views.despre, name="despre"),
     path("istoric", views.istoric, name="istoric"),
     path("produse", views.produse, name="produse"),
+    # /produse/7 e pagina unui produs; Produs.get_absolute_url() construiește adresa asta
+    path("produse/<int:id>", views.produs, name="produs"),
+    # /categorii/Frigidere: numele unic al categoriei, cu spații și diacritice codate în URL
+    path("categorii/<str:nume>", views.categorie, name="categorie"),
     path("servicii", views.servicii, name="servicii"),
     path("promotii", views.promotii, name="promotii"),
     path("contact", views.contact, name="contact"),

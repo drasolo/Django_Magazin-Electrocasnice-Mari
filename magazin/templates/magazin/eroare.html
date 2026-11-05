@@ -1,0 +1,9 @@
+{% extends "magazin/baza.html" %}
+
+{% block titlu %}Pagina nu există{% endblock %}
+
+{% block continut %}
+<h1>Pagina nu există</h1>
+<p class="eroare">{{ mesaj }}</p>
+<p>Vezi <a href="{% url 'produse' %}">toate produsele</a> sau întoarce-te la <a href="{% url 'index' %}">pagina principală</a>.</p>
+{% endblock %}

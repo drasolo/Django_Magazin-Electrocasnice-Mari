@@ -1,0 +1,8 @@
+{# Marcajul de stoc. stoc_limitat() compară stocul cu STOC_MIN din settings.py. #}
+{% if produs.stoc == 0 %}
+<p class="stoc stoc-limitat"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> Stoc epuizat</p>
+{% elif produs.stoc_limitat %}
+<p class="stoc stoc-limitat"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Stoc limitat: doar {{ produs.stoc }} buc.</p>
+{% else %}
+<p class="stoc">În stoc</p>
+{% endif %}

@@ -1,0 +1,51 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{# Înlocuiește template-ul base_site.html al adminului și îl extinde pe cel original. #}
+{# Django găsește întâi fișierul ăsta, pentru că DIRS din settings.py are templates/. #}
+
+{# Fără modul întunecat: culorile de mai jos se văd la fel pentru toți. #}
+{% block dark-mode-vars %}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{# Iconurile categoriilor (FontAwesome) apar și în listarea din admin #}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+    /* Variabilele vin din admin/css/base.css; aici le dăm alte valori */
+    :root {
+        --primary: #1f5f8b;          /* titlurile tabelelor cu modele */
+        --secondary: #17405e;
+        --header-bg: #17405e;        /* antetul */
+        --accent: #ffd166;           /* titlul din antet (linkul spre pagina principală) */
+        --body-bg: #f2f5f8;          /* fundalul paginii */
+        --breadcrumbs-bg: #2a7ab0;   /* bara cu breadcrumbs */
+        --selected-row: #ffe7a3;     /* rândul bifat din listă */
+    }
+
+    /* meniul din stânga, cu aplicațiile și modelele */
+    #nav-sidebar {
+        background: #dde7f0;
+    }
+
+    #site-name a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* butonul pentru tema întunecată nu mai are rost */
+    .theme-toggle {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{# Antetul, cu sigla magazinului lângă titlu #}
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <img src="{% static 'imagini/sigla.svg' %}" alt="" width="32" height="32">
+        {{ site_header }}
+    </a>
+</div>
+{% endblock %}

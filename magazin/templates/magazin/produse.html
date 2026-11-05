@@ -1,0 +1,64 @@
+{% extends "magazin/baza.html" %}
+{% load magazin_taguri %}
+{# Același template pentru toate produsele (/produse) și pentru o categorie (/categorii/nume) #}
+
+{% block titlu %}{% if categorie %}{{ categorie.nume }}{% else %}Produse{% endif %}{% endblock %}
+
+{% block continut %}
+{% if categorie %}
+<section class="antet-categorie" style="--culoare: {{ categorie.culoare }}">
+    <h1><i class="{{ categorie.sigla }}" aria-hidden="true"></i> {{ categorie.nume }}</h1>
+    {% if categorie.descriere %}<p>{{ categorie.descriere }}</p>{% endif %}
+</section>
+{% else %}
+<h1>Toate produsele</h1>
+{% endif %}
+
+{# Formular GET: la trimitere, alegerile ajung în URL (?coloana=pret&sort=a). #}
+{# Tagurile active merg mai departe prin câmpuri ascunse, ca filtrarea să rămână. #}
+<form class="sortare" method="get">
+    <label>
+        Sortează după
+        <select name="coloana">
+            {% for cheie, eticheta in coloane_sortare %}
+            <option value="{{ cheie }}"{% if cheie == coloana %} selected{% endif %}>{{ eticheta }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <select name="sort" aria-label="Sensul sortării">
+        <option value="a"{% if sens == "a" %} selected{% endif %}>crescător</option>
+        <option value="d"{% if sens == "d" %} selected{% endif %}>descrescător</option>
+    </select>
+    {% for tag in taguri_active %}
+    <input type="hidden" name="tag" value="{{ tag }}">
+    {% endfor %}
+    <button type="submit">Sortează</button>
+</form>
+{% if eroare_sortare %}<p class="eroare">{{ eroare_sortare }}</p>{% endif %}
+
+{% if taguri_active %}
+<div class="taguri-active">
+    <span>Taguri active:</span>
+    {% for tag in taguri_active %}
+    <a class="tag-activ" href="{% scoate_tag tag %}" title="Scoate tagul {{ tag }}">{{ tag }} <span aria-hidden="true">×</span></a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if pagina.paginator.count %}
+{% include "magazin/paginare.html" %}
+<p>Se afișează produsele între {{ pagina.start_index }} și {{ pagina.end_index }} din totalul de {{ pagina.paginator.count }} produse.</p>
+
+<div class="grila-produse">
+    {% for produs in pagina %}
+    {% include "magazin/produs_card.html" %}
+    {% endfor %}
+</div>
+
+{% include "magazin/paginare.html" %}
+{% elif taguri_active %}
+<p>Niciun produs nu are toate tagurile active. Scoate un tag ca să vezi mai multe produse.</p>
+{% else %}
+<p>Nu există încă produse aici.</p>
+{% endif %}
+{% endblock %}

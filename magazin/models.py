@@ -4,8 +4,8 @@ from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 from django.urls import reverse
 
-# Modelele urmează diagrama din docs/diagrama.png. Cheile primare (id_categorie,
-# id_brand etc.) nu apar aici: Django creează singur câmpul id pentru fiecare model.
+# Modelele urmează diagrama din docs/diagrama.png. Cheia primară id nu apare aici:
+# Django creează singur câmpul id pentru fiecare model.
 
 
 class Categorie(models.Model):

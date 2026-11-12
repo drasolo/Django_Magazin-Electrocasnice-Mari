@@ -10,3 +10,7 @@ media/
 materiale/
 .env
 staticfiles/
+
+# Notițe personale de lucru
+docs/cerinte.md
+docs/date_admin.md
